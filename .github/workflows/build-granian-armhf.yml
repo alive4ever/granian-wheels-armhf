@@ -1,5 +1,5 @@
 name: Building granian for armhf
-run-name: ${{ github.actor }} is building granian for armhf ${{ matrix.deb_codename }}
+run-name: ${{ github.actor }} is building granian for armhf
 on:
   push:
     tags:
@@ -9,10 +9,10 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-26.04-arm
     strategy:
       matrix:
         deb_codename: [trixie, bookworm]
+    runs-on: ubuntu-26.04-arm
     steps:
       - name: Prepare chroot
         run: |
