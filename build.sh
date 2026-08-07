@@ -1,5 +1,5 @@
 set -e
-export GRANIAN_VERSION="2.8.1"
+export GRANIAN_VERSION="v2.8.1"
 if ! [ -d "$HOME/.local/bin" ]; then
 	mkdir -p "$HOME/.local/bin"
 fi
