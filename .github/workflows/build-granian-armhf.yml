@@ -25,8 +25,13 @@ jobs:
         uses: actions/checkout@v7
       - name: Building granian
         run: |
-          sudo systemd-nspawn --bind ${{ github.workspace }}:/tmp/host_workspace,rootidmap --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-raspbian -- setarch arm sh /tmp/host_workspace/prepare.sh
-          sudo systemd-nspawn --bind ${{ github.workspace }}:/tmp/host_workspace,rootidmap --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-raspbian --user builder -- setarch arm sh /tmp/host_workspace/build.sh
+          umask 022
+          mkdir -p /tmp/host_workspace
+          chmod go+rx /tmp/host_workspace
+          cp -v ${{ github.workspace }}/* /tmp/host_workspace/
+          sudo systemd-nspawn --bind /tmp/host_workspace --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-raspbian -- setarch arm sh /tmp/host_workspace/prepare.sh
+          sudo systemd-nspawn --bind /tmp/host_workspace --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-raspbian --user builder -- setarch arm sh /tmp/host_workspace/build.sh
+          cp -rv /tmp/host_workspace/dist ${{ github.workspace }}/
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
