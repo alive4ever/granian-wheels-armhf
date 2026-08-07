@@ -8,11 +8,11 @@ permissions:
   contents: write
 
 jobs:
-  build-for-trixie:
+  build:
+    runs-on: ubuntu-26.04-arm
     strategy:
       matrix:
         deb_codename: [trixie, bookworm]
-    runs-on: ubuntu-26.04-arm
     steps:
       - name: Prepare chroot
         run: |
