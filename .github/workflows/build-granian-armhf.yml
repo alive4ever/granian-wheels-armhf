@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y mmdebstrap qemu-user-binfmt systemd-container debian-archive-keyring
-          curl -L -O "http://archive.raspbian.org/raspbian/pool/main/r/raspbian-archive-keyring_20120528.4_all.deb"
+          curl -L -O "http://archive.raspbian.org/raspbian/pool/main/r/raspbian-archive-keyring/raspbian-archive-keyring_20120528.4_all.deb"
           mkdir -p /tmp/out
           dpkg-deb --extract ./raspbian-archive-keyring_20120528.4_all.deb /tmp/out/
           sudo cp -v /tmp/out/usr/share/keyrings/raspbian-archive-keyring.gpg /etc/apt/trusted.gpg.d/
