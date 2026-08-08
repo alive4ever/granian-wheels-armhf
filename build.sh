@@ -30,7 +30,7 @@ extra-index-url = https://www.piwheels.org/simple
 EOL
 . ~/venv/bin/activate
 pip install -U pip
-pip install build
+pip install --prefer-binary maturin build
 cd granian
-python3 -m build
+python3 -m build -w --no-isolation
 sudo cp -rv ./dist /tmp/host_workspace/
