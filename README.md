@@ -1,8 +1,10 @@
-# granian python package for raspbian/debian armhf
+# granian python package for debian armhf
 
 ## Motivation
 
-There is no prebuilt wheels for granian in both [pypi](https://pypi.org/project/granian) and [piwheels](https://www.piwheels.org/project/granian).
+~~There is no prebuilt wheels for granian in both [pypi](https://pypi.org/project/granian) and [piwheels](https://www.piwheels.org/project/granian).~~
+
+Update: only piwheels builds are missing wheels, the pypi project is fine.
 
 ## Usage
 
