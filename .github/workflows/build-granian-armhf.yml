@@ -18,9 +18,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y mmdebstrap qemu-user-binfmt systemd-container debian-archive-keyring
-          curl -L -O "http://archive.raspbian.org/raspbian/pool/main/r/raspbian-archive-keyring/raspbian-archive-keyring_20120528.4_all.deb"
-          sudo dpkg --install ./raspbian-archive-keyring_20120528.4_all.deb
-          sudo mmdebstrap --arch=armhf --setup-hook 'mkdir -p "$1"/usr/share/keyrings; cp -v /usr/share/keyrings/raspbian-archive-keyring.gpg "$1"/usr/share/keyrings/' --keyring /usr/share/keyrings/ --include='git curl sudo ca-certificates build-essential python3-venv python3 python3-dev' ${{ matrix.deb_codename }} /var/lib/machines/armhf-raspbian http://archive.raspbian.org/raspbian/
+          sudo mmdebstrap --arch=armhf --include='git curl sudo ca-certificates build-essential python3-venv python3 python3-dev' ${{ matrix.deb_codename }} /var/lib/machines/armhf-debian
       - name: Prepare repository
         uses: actions/checkout@v7
       - name: Building granian
@@ -29,8 +27,8 @@ jobs:
           mkdir -p /tmp/host_workspace
           chmod go+rx /tmp/host_workspace
           cp -v ${{ github.workspace }}/* /tmp/host_workspace/
-          sudo systemd-nspawn --bind /tmp/host_workspace --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-raspbian -- setarch arm sh /tmp/host_workspace/prepare.sh
-          sudo systemd-nspawn --bind /tmp/host_workspace --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-raspbian --user builder -- setarch arm sh /tmp/host_workspace/build.sh
+          sudo systemd-nspawn --bind /tmp/host_workspace --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-debian -- setarch arm sh /tmp/host_workspace/prepare.sh
+          sudo systemd-nspawn --bind /tmp/host_workspace --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-debian --user builder -- setarch arm sh /tmp/host_workspace/build.sh
           cp -rv /tmp/host_workspace/dist ${{ github.workspace }}/
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
