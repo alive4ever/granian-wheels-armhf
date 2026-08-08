@@ -16,7 +16,7 @@ echo "Installing latest rust..."
 curl -Lo ~/rust-bootstrap.sh https://sh.rustup.rs
 . ~/rust-bootstrap.sh
 chmod +x ~/rust-bootstrap.sh
-~/rust-bootstrap.sh -y -v
+~/rust-bootstrap.sh -y -v --no-modify-path --no-update-default-toolchain --profile default
 echo "Finished installing latest rust..."
 echo "Prepending ~/.cargo/bin to PATH"
 PATH="$HOME/.cargo/bin:$PATH"
