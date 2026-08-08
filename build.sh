@@ -14,7 +14,6 @@ sh uv-install.sh -v --no-modify-path
 command -v uv || exit 127
 echo "Installing latest rust..."
 curl -Lo ~/rust-bootstrap.sh https://sh.rustup.rs
-. ~/rust-bootstrap.sh
 chmod +x ~/rust-bootstrap.sh
 ~/rust-bootstrap.sh -y -v --no-modify-path --no-update-default-toolchain --profile default
 echo "Finished installing latest rust..."
