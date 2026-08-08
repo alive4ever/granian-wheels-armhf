@@ -24,6 +24,10 @@ rustc --version
 command -v cargo || exit 127
 cargo --version
 python3 -m venv ~/venv
+cat > ~/venv/pip.conf << EOL
+[global]
+extra-index-url = https://www.piwheels.org/simple
+EOL
 . ~/venv/bin/activate
 pip install -U pip
 pip install build
