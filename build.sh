@@ -23,15 +23,17 @@ command -v rustc || exit 127
 rustc --version
 command -v cargo || exit 127
 cargo --version
-export RUSTFLAGS="-C link-arg=-fuse-ld=lld"
-python3 -m venv ~/venv
-cat > ~/venv/pip.conf << EOL
-[global]
-extra-index-url = https://www.piwheels.org/simple
-EOL
+. /etc/os-release
+case $VERSION_CODENAME in
+	"trixie")
+		x=13;;
+	"bookworm")
+		x=11;;
+esac
+uv python install 3.$x
+uv venv ~/venv
 . ~/venv/bin/activate
-pip install -U pip
-pip install --prefer-binary maturin build
+uv pip install build
 cd granian
-python3 -m build -w --no-isolation
+uv build -w
 sudo cp -rv ./dist /tmp/host_workspace/
