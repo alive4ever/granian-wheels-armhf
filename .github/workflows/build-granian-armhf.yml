@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y mmdebstrap qemu-user-binfmt systemd-container debian-archive-keyring
-          sudo mmdebstrap --arch=armhf --include='git curl sudo ca-certificates build-essential python3-venv python3 python3-dev' ${{ matrix.deb_codename }} /var/lib/machines/armhf-debian
+          sudo mmdebstrap --arch=armhf --include='git curl sudo ca-certificates python3-venv python3 python3-dev libssl-dev pkgconf lld clang' ${{ matrix.deb_codename }} /var/lib/machines/armhf-debian
       - name: Prepare repository
         uses: actions/checkout@v7
       - name: Building granian
