@@ -33,7 +33,6 @@ esac
 uv python install 3.$x
 uv venv ~/venv
 . ~/venv/bin/activate
-uv pip install build
 cd granian
-uv build -w
+uv build --wheel
 sudo cp -rv ./dist /tmp/host_workspace/
