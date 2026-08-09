@@ -23,6 +23,7 @@ command -v rustc || exit 127
 rustc --version
 command -v cargo || exit 127
 cargo --version
+export RUSTFLAGS="-C link-arg=-fuse-ld=lld"
 python3 -m venv ~/venv
 cat > ~/venv/pip.conf << EOL
 [global]
