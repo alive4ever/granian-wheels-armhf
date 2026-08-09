@@ -11,28 +11,33 @@ jobs:
   build:
     strategy:
       matrix:
-        deb_codename: [trixie, bookworm]
+        python_version: [3.10, 3.11, 3.12, 3.13, 3.14]
     runs-on: ubuntu-26.04-arm
     steps:
-      - name: Prepare chroot
+      - name: Prepare qemu-user
         run: |
           sudo apt-get update
-          sudo apt-get install -y mmdebstrap qemu-user-binfmt systemd-container debian-archive-keyring
-          sudo mmdebstrap --arch=armhf --include='git curl sudo ca-certificates libssl-dev pkgconf lld clang' ${{ matrix.deb_codename }} /var/lib/machines/armhf-debian
+          sudo apt-get install -y qemu-user-binfmt
       - name: Prepare repository
         uses: actions/checkout@v7
-      - name: Building granian
+      - name: Prepare granian
         run: |
-          sudo mkswap -U clear --size 4G --file /var/cache/swapfile.img
-          sudo swapon /var/cache/swapfile.img
-          free -h
-          umask 022
-          mkdir -p /tmp/host_workspace
-          chmod go+rx /tmp/host_workspace
-          cp -v ${{ github.workspace }}/* /tmp/host_workspace/
-          sudo systemd-nspawn --bind /tmp/host_workspace --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-debian -- setarch arm sh /tmp/host_workspace/prepare.sh
-          sudo systemd-nspawn --bind /tmp/host_workspace --bind-ro /etc/resolv.conf --hostname localhost --machine armhf-debian --user builder -- setarch arm sh /tmp/host_workspace/build.sh
-          cp -rv /tmp/host_workspace/dist ${{ github.workspace }}/
+          git clone https://github.com/emmett-framework/granian
+          cd granian
+          git checkout v2.8.1
+          cd ..
+      - name: Setup python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python_version }}
+      - name: Build granian
+        uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          args: --release --out ${{ github.workspace }}/dist -i python${{ matrix.python_version }}
+          target: armv7-unknown-linux-gnueabihf
+          manylinux: 2_28
+          working-directory: ${{ github.workspace }}/granian
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
