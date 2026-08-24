@@ -1,5 +1,5 @@
 set -e
-export GRANIAN_VERSION="v2.8.1"
+export GRANIAN_VERSION="v2.8.2"
 if ! [ -d "$HOME/.local/bin" ]; then
 	mkdir -p "$HOME/.local/bin"
 fi
@@ -15,7 +15,7 @@ command -v uv || exit 127
 echo "Installing latest rust..."
 curl -Lo ~/rust-bootstrap.sh https://sh.rustup.rs
 chmod +x ~/rust-bootstrap.sh
-~/rust-bootstrap.sh -y -v --no-modify-path
+~/rust-bootstrap.sh -y -v --no-modify-path --default-toolchain=1.97.1
 echo "Finished installing latest rust..."
 echo "Prepending ~/.cargo/bin to PATH"
 PATH="$HOME/.cargo/bin:$PATH"
