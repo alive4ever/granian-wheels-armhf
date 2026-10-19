@@ -22,9 +22,9 @@ jobs:
         uses: actions/checkout@v7
       - name: Prepare granian
         run: |
-          git clone https://github.com/emmett-framework/granian
+          git clone --filter=blob:none https://github.com/emmett-framework/granian
           cd granian
-          git checkout v2.8.3
+          git checkout v2.8.4
           cd ..
       - name: Setup python
         uses: actions/setup-python@v7
