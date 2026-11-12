@@ -24,7 +24,7 @@ jobs:
         run: |
           git clone --filter=blob:none https://github.com/emmett-framework/granian
           cd granian
-          git checkout v2.8.7
+          git checkout v2.8.8
           cd ..
       - name: Setup python
         uses: actions/setup-python@v7
