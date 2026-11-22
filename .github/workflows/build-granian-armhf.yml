@@ -11,7 +11,12 @@ jobs:
   build:
     strategy:
       matrix:
-        python_version: [3.11, 3.12, 3.13, 3.14]
+        python_version: [3.11, 3.12, 3.13, 3.14, 3.15]
+        target:
+        - rust_target: armv7-unknown-linux-gnueabihf
+          manylinux_tag: '2_28'
+        - rust_target: armv7-unknown-linux-musleabihf
+          manylinux_tag: musllinux_1_1
     runs-on: ubuntu-26.04-arm
     steps:
       - name: Prepare qemu-user
@@ -24,7 +29,7 @@ jobs:
         run: |
           git clone --filter=blob:none https://github.com/emmett-framework/granian
           cd granian
-          git checkout v2.8.8
+          git checkout v2.8.9
           cd ..
       - name: Setup python
         uses: actions/setup-python@v7
@@ -35,18 +40,27 @@ jobs:
         with:
           command: build
           args: --release --out ${{ github.workspace }}/dist -i python${{ matrix.python_version }}
-          target: armv7-unknown-linux-gnueabihf
-          manylinux: 2_28
+          target: ${{ matrix.target.rust_target }}
+          manylinux: ${{ matrix.target.manylinux_tag }}
           working-directory: ${{ github.workspace }}/granian
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: python-package-${{ matrix.python_version }}
+          name: python-package-${{ matrix.python_version }}-${{ matrix.target.rust_target }}
           path: ${{ github.workspace }}/dist/
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-26.04-arm
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{ github.workspace }}/dist
+          merge-multiple: true
       - name: Creating release
-        if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ github.ref_name }}"
-          gh release create "$TAG" ${{ github.workspace }}/dist/* --verify-tag --generate-notes || gh release upload "$TAG" ${{ github.workspace }}/dist/*
+          gh release create "$TAG" ${{ github.workspace }}/dist/* --verify-tag --generate-notes || gh release upload --clobber "$TAG" ${{ github.workspace }}/dist/*
